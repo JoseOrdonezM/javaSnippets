@@ -32,6 +32,9 @@ class LaminaCalculadora extends JPanel{
 	private JPanel milamina2;
 	private JButton pantalla;
 	private boolean principio;
+	private double resultado;
+	private String ultimaOperacion;
+	
 	public LaminaCalculadora(){
 		principio=true;
 		setLayout(new BorderLayout());
@@ -41,23 +44,26 @@ class LaminaCalculadora extends JPanel{
 		milamina2=new JPanel();
 		milamina2.setLayout(new GridLayout(4,4));		
 		ActionListener insertar=new InsertaNumero();
+		ActionListener orden=new AccionOrden();
+		
 		ponerBoton("7",insertar);
 		ponerBoton("8",insertar);
 		ponerBoton("9",insertar);
-		//ponerBoton("/");		
+		ponerBoton("/",orden);		
 		ponerBoton("4",insertar);
 		ponerBoton("5",insertar);
 		ponerBoton("6",insertar);
-		//ponerBoton("*");		
+		ponerBoton("*",orden);		
 		ponerBoton("1",insertar);
 		ponerBoton("2",insertar);
 		ponerBoton("3",insertar);
-		//ponerBoton("-");
+		ponerBoton("-",orden);
 		ponerBoton("0",insertar);
 		ponerBoton(".",insertar);
-		//ponerBoton("=");
-		//ponerBoton("+");
+		ponerBoton("=",orden);
+		ponerBoton("+",orden);
 		add(milamina2, BorderLayout.CENTER);
+		ultimaOperacion="=";
 				
 	}
 	private void ponerBoton(String rotulo, ActionListener oyente) {//2 funciones:coloca los botones y los hace escuchar
@@ -78,6 +84,42 @@ class LaminaCalculadora extends JPanel{
 			}
 			pantalla.setText(pantalla.getText()+entrada);
 						
+		}
+		
+	}
+	private class AccionOrden implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			String operacion=e.getActionCommand();
+			//System.out.println(operacion); //Cheap Debbugging
+			
+			calcular(Double.parseDouble(pantalla.getText()));
+			
+			ultimaOperacion=operacion;
+						
+			principio=true;
+			
+		}
+		public void calcular(double x) {
+			if(ultimaOperacion.equals("+")) {
+				resultado+=x;
+				//System.out.println(resultado); //Cheap Debbugging
+			}
+			else if(ultimaOperacion.equals("-")) {
+				resultado-=x;
+			}
+			else if(ultimaOperacion.equals("*")) {
+				resultado*=x;
+			}
+			else if(ultimaOperacion.equals("/")) {
+				resultado/=x;
+			}
+			else if(ultimaOperacion.equals("=")) {
+				resultado=x;
+			}
+			pantalla.setText("" + resultado);
 		}
 		
 	}
